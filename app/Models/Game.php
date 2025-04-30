@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+/* @var $firstTeam Team */
+/* @var $secondTeam Team*/
+/* @var $tournament Tournament */
+/* @var $participants TeamStudentParticipant[] */
 class Game extends Model
 {
     use HasFactory;

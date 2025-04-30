@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+/* @var $student Student */
+/* @var $team Team */
+/* @var $participants TeamStudentParticipant[] */
 class TeamStudent extends Model
 {
     use HasFactory;
