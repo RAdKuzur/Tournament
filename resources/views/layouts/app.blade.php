@@ -34,6 +34,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('school.index') }}">Школы</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('student.index') }}">Участники</a>
+                </li>
             </ul>
         </div>
     </div>

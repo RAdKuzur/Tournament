@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Список школ')
+@section('title', 'Редактирование школы')
 
 @section('content')
     <!DOCTYPE html>
