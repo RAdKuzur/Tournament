@@ -37,7 +37,6 @@ class StudentController extends Controller
             'olymp_score' => 'required|integer|max:1000',
             'school_id' => 'required|integer',
         ]);
-        var_dump($this->studentRepository->checkUnique($data['school_id'], $data['surname'], $data['name'], $data['patronymic']));
         if(!$this->studentRepository->checkUnique($data['school_id'], $data['surname'], $data['name'], $data['patronymic'])) {
             $student = Student::create([
                 'surname' => $data['surname'],
@@ -50,8 +49,41 @@ class StudentController extends Controller
         }
         return redirect('student/index');
     }
-    public function show($id) {}
-    public function edit($id) {}
-    public function update(Request $request, $id) {}
-    public function destroy($id) {}
+    public function show($id) {
+        $student = $this->studentRepository->get($id);
+        return view('student.show', ['student' => $student]);
+    }
+    public function edit($id) {
+        $student = $this->studentRepository->get($id);
+        $schools = $this->schoolRepository->getAll();
+        return view('student.edit', [
+            'schools' => $schools,
+            'student' => $student
+        ]);
+    }
+    public function update(Request $request, $id) {
+        $data = $request->validate([
+            'surname' => 'required|string|max:1000',
+            'name' => 'required|string|max:1000',
+            'patronymic' => 'string|max:1000',
+            'olymp_score' => 'required|integer|max:1000',
+            'school_id' => 'required|integer',
+        ]);
+        if(!$this->studentRepository->checkUnique($data['school_id'], $data['surname'], $data['name'], $data['patronymic'])) {
+            $student = $this->studentRepository->get($id);
+            $student->update([
+                'surname' => $data['surname'],
+                'name' => $data['name'],
+                'patronymic' => $data['patronymic'],
+                'olymp_score' => $data['olymp_score'],
+                'school_id' => $data['school_id'],
+            ]);
+            return redirect()->route('student.show', ['id' => $student->id]);
+        }
+        return redirect('student/index');
+    }
+    public function destroy($id) {
+        $this->studentRepository->delete($id);
+        return redirect('student/index');
+    }
 }

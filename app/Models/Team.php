@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /* @var $school School */
 /* @var $students Student[] */
 /* @var $teamStudents TeamStudent[] */
+/* @var $tournament Tournament */
 class Team extends Model
 {
     use HasFactory;
@@ -35,5 +36,9 @@ class Team extends Model
     public function gamesAsSecondTeam()
     {
         return $this->hasMany(Game::class, 'second_team_id');
+    }
+    public function tournament()
+    {
+        return $this->belongsTo(Tournament::class);
     }
 }

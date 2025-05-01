@@ -34,4 +34,8 @@ class Student extends Model
     {
         return $this->belongsToMany(Team::class, 'team_students');
     }
+    public function getFullFio()
+    {
+        return $this->surname . ' ' . $this->name . ' ' . $this->patronymic;
+    }
 }

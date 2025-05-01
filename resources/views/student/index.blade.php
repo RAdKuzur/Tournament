@@ -33,10 +33,10 @@
                                 <td class="fw-semibold">{{ $student->olymp_score }}</td>
                                 <td class="fw-semibold">{{ $student->school->name }}</td>
                                 <td class="text-end">
-                                    <a href="{{ route('school.show', $student->id) }}" class="btn btn-sm btn-outline-primary">Просмотр</a>
-                                    <a href="{{ route('school.edit', $student->id) }}" class="btn btn-sm btn-outline-warning">Изменить</a>
+                                    <a href="{{ route('student.show', $student->id) }}" class="btn btn-sm btn-outline-primary">Просмотр</a>
+                                    <a href="{{ route('student.edit', $student->id) }}" class="btn btn-sm btn-outline-warning">Изменить</a>
 
-                                    <form action="{{ route('school.destroy', $student->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Удалить эту школу?');">
+                                    <form action="{{ route('student.destroy', $student->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Удалить эту школу?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>

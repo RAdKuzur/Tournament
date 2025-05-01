@@ -8,9 +8,10 @@
 
         <div class="mb-3">
             <strong>ID:</strong> {{ $school->id }}
+            <strong>Название учреждения:</strong> {{ $school->name }}
         </div>
 
         <a href="{{ route('school.index') }}" class="btn btn-secondary">Назад к списку</a>
-        <a href="{{ route('school.edit', $school) }}" class="btn btn-warning">Изменить</a>
+        <a href="{{ route('school.edit', $school->id) }}" class="btn btn-warning">Изменить</a>
     </div>
 @endsection
