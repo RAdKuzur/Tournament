@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeamController;
@@ -18,6 +19,12 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+//AuthController
+Route::get('/auth/form', [AuthController::class, 'form'])->name('auth.form');
+Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
+Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
+
 //SchoolController
 Route::get('/school/index', [SchoolController::class, 'index'])->name('school.index');
 Route::get('/school/create', [SchoolController::class, 'create'])->name('school.create');
@@ -26,7 +33,6 @@ Route::get('/school/show/{id}', [SchoolController::class, 'show'])->name('school
 Route::get('/school/edit/{id}', [SchoolController::class, 'edit'])->name('school.edit');
 Route::put('/school/update/{id}', [SchoolController::class, 'update'])->name('school.update');
 Route::delete('/school/destroy/{id}', [SchoolController::class, 'destroy'])->name('school.destroy');
-
 
 //StudentController
 Route::get('/student/index', [StudentController::class, 'index'])->name('student.index');
@@ -56,5 +62,5 @@ Route::put('/team/update/{id}', [TeamController::class, 'update'])->name('team.u
 Route::delete('/team/destroy/{id}', [TeamController::class, 'destroy'])->name('team.destroy');
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('auth.form');
 });
