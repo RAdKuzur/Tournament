@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -44,6 +45,15 @@ Route::get('/tournament/show/{id}', [TournamentController::class, 'show'])->name
 Route::get('/tournament/edit/{id}', [TournamentController::class, 'edit'])->name('tournament.edit');
 Route::put('/tournament/update/{id}', [TournamentController::class, 'update'])->name('tournament.update');
 Route::delete('/tournament/destroy/{id}', [TournamentController::class, 'destroy'])->name('tournament.destroy');
+
+//TeamController
+Route::get('/team/index', [TeamController::class, 'index'])->name('team.index');
+Route::get('/team/create', [TeamController::class, 'create'])->name('team.create');
+Route::post('/team/store', [TeamController::class, 'store'])->name('team.store');
+Route::get('/team/show/{id}', [TeamController::class, 'show'])->name('team.show');
+Route::get('/team/edit/{id}', [TeamController::class, 'edit'])->name('team.edit');
+Route::put('/team/update/{id}', [TeamController::class, 'update'])->name('team.update');
+Route::delete('/team/destroy/{id}', [TeamController::class, 'destroy'])->name('team.destroy');
 
 Route::get('/', function () {
     return view('welcome');

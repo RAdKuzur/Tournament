@@ -10,6 +10,7 @@
 
     <!-- Подключаем шрифт (опционально) -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -33,6 +34,9 @@
             <ul class="navbar-nav ms-auto mb-2 mb-md-0">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('tournament.index') }}">Турниры</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('team.index') }}">Команды</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('school.index') }}">Школы</a>

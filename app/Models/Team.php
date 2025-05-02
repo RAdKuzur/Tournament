@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class Team extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'school_id'];
+    protected $fillable = ['name', 'school_id', 'tournament_id'];
 
     public function school()
     {
@@ -40,5 +40,13 @@ class Team extends Model
     public function tournament()
     {
         return $this->belongsTo(Tournament::class);
+    }
+    public function getOlympScore(){
+        $participants = $this->teamStudents;
+        $score = 0;
+        foreach($participants as $participant){
+            $score = $score + $participant->student->olymp_score;
+        }
+        return $score;
     }
 }
