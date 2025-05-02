@@ -30,7 +30,7 @@ class UserController extends Controller
             ]);
         }
         else {
-            return redirect()->route('auth.logout');
+            return redirect()->route('tournament.index');
         }
     }
     public function create() {
