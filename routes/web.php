@@ -23,7 +23,8 @@ use Illuminate\Support\Facades\Route;
 //AuthController
 Route::get('/auth/form', [AuthController::class, 'form'])->name('auth.form');
 Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
-Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
+Route::get('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
+Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register');
 
 //SchoolController
 Route::get('/school/index', [SchoolController::class, 'index'])->name('school.index');
@@ -60,6 +61,15 @@ Route::get('/team/show/{id}', [TeamController::class, 'show'])->name('team.show'
 Route::get('/team/edit/{id}', [TeamController::class, 'edit'])->name('team.edit');
 Route::put('/team/update/{id}', [TeamController::class, 'update'])->name('team.update');
 Route::delete('/team/destroy/{id}', [TeamController::class, 'destroy'])->name('team.destroy');
+
+//UserController
+Route::get('/user/index', [UserController::class, 'index'])->name('user.index');
+Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
+Route::get('/user/show/{id}', [UserController::class, 'show'])->name('user.show');
+Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+Route::put('/user/update/{id}', [UserController::class, 'update'])->name('user.update');
+Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 
 Route::get('/', function () {
     return redirect()->route('auth.form');

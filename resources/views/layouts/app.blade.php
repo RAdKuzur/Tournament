@@ -44,6 +44,18 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('student.index') }}">Участники</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('user.index') }}">Пользователи</a>
+                </li>
+                @if(Auth::check())
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('auth.logout') }}">{{Auth::user()->name}} , Выйти</a>
+                    </li>
+                @else
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('auth.form') }}">Войти</a>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>

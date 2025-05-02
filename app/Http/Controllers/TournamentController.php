@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Repositories\TournamentRepository;
+use App\Http\Services\AccessService;
 use App\Models\Tournament;
 use Illuminate\Http\Request;
 
@@ -10,69 +11,107 @@ class TournamentController extends Controller
 {
     //
     private TournamentRepository $tournamentRepository;
+    private AccessService $accessService;
     public function __construct(
-        TournamentRepository $tournamentRepository
+        TournamentRepository $tournamentRepository,
+        AccessService $accessService
     )
     {
         $this->tournamentRepository = $tournamentRepository;
+        $this->accessService = $accessService;
     }
 
     public function index() {
-        $tournaments = Tournament::all();
-        return view('tournament.index', compact('tournaments'));
+        if($this->accessService->checkAccess()) {
+            $tournaments = Tournament::all();
+            return view('tournament.index', compact('tournaments'));
+        }
+        else {
+            return redirect()->route('auth.logout');
+        }
     }
     public function create() {
-        $types = $this->tournamentRepository->getTypes();
-        return view('tournament.create', compact('types'));
+        if($this->accessService->checkAccess()) {
+            $types = $this->tournamentRepository->getTypes();
+            return view('tournament.create', compact('types'));
+        }
+        else {
+            return redirect()->route('tournament.index');
+        }
     }
     public function store(Request $request) {
-       $data = $request->validate([
-           'name' => 'required | string | max:1000',
-           'begin_date' => 'required | date',
-           'finish_date' => 'required | date',
-           'type' => 'required',
-       ]);
-       if(!$this->tournamentRepository->checkUnique($data['name'], $data['begin_date'], $data['finish_date'])) {
-           $tournament = Tournament::create([
-               'name' => $data['name'],
-               'begin_date' => $data['begin_date'],
-               'finish_date' => $data['finish_date'],
-               'type' => $data['type']
-           ]);
-           return redirect()->route('tournament.show', ['id' => $tournament->id]);
-       }
-        return redirect('tournament/index');
+        if($this->accessService->checkAccess()){
+            $data = $request->validate([
+                'name' => 'required | string | max:1000',
+                'begin_date' => 'required | date',
+                'finish_date' => 'required | date',
+                'type' => 'required',
+            ]);
+            if (!$this->tournamentRepository->checkUnique($data['name'], $data['begin_date'], $data['finish_date'])) {
+                $tournament = Tournament::create([
+                    'name' => $data['name'],
+                    'begin_date' => $data['begin_date'],
+                    'finish_date' => $data['finish_date'],
+                    'type' => $data['type']
+                ]);
+                return redirect()->route('tournament.show', ['id' => $tournament->id]);
+            }
+            return redirect('tournament/index');
+        }
+        else {
+            return redirect()->route('tournament.index');
+        }
     }
     public function show($id) {
-        $tournament = $this->tournamentRepository->get($id);
-        return view('tournament.show', compact('tournament'));
+        if($this->accessService->checkAccess()){
+            $tournament = $this->tournamentRepository->get($id);
+            return view('tournament.show', compact('tournament'));
+        }
+        else {
+            return redirect()->route('tournament.index');
+        }
     }
     public function edit($id) {
-        $tournament = $this->tournamentRepository->get($id);
-        $types = $this->tournamentRepository->getTypes();
-        return view('tournament.edit', compact('tournament', 'types'));
+        if($this->accessService->checkAccess()){
+            $tournament = $this->tournamentRepository->get($id);
+            $types = $this->tournamentRepository->getTypes();
+            return view('tournament.edit', compact('tournament', 'types'));
+        }
+        else {
+            return redirect()->route('tournament.index');
+        }
     }
     public function update(Request $request, $id) {
-        $data = $request->validate([
-            'name' => 'required | string | max:1000',
-            'begin_date' => 'required | date',
-            'finish_date' => 'required | date',
-            'type' => 'required',
-        ]);
-        if(!$this->tournamentRepository->checkUnique($data['name'], $data['begin_date'], $data['finish_date'])) {
-            $tournament = $this->tournamentRepository->get($id);
-            $tournament->update([
-                'name' => $data['name'],
-                'begin_date' => $data['begin_date'],
-                'finish_date' => $data['finish_date'],
-                'type' => $data['type']
+        if($this->accessService->checkAccess()){
+            $data = $request->validate([
+                'name' => 'required | string | max:1000',
+                'begin_date' => 'required | date',
+                'finish_date' => 'required | date',
+                'type' => 'required',
             ]);
-            return redirect()->route('tournament.show', ['id' => $tournament->id]);
+            if (!$this->tournamentRepository->checkUnique($data['name'], $data['begin_date'], $data['finish_date'])) {
+                $tournament = $this->tournamentRepository->get($id);
+                $tournament->update([
+                    'name' => $data['name'],
+                    'begin_date' => $data['begin_date'],
+                    'finish_date' => $data['finish_date'],
+                    'type' => $data['type']
+                ]);
+                return redirect()->route('tournament.show', ['id' => $tournament->id]);
+            }
+            return redirect('tournament/index');
         }
-        return redirect('tournament/index');
+        else {
+            return redirect()->route('tournament.index');
+        }
     }
     public function destroy($id) {
-        $this->tournamentRepository->delete($id);
-        return redirect()->route('tournament.index');
+        if($this->accessService->checkAccess()){
+            $this->tournamentRepository->delete($id);
+            return redirect()->route('tournament.index');
+        }
+        else {
+            return redirect()->route('tournament.index');
+        }
     }
 }
