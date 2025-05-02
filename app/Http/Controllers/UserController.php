@@ -85,6 +85,7 @@ class UserController extends Controller
             $data = $request->validate([
                 'name' => 'required | string | max:1000',
                 'email' => 'required | email',
+                'password' => 'nullable|string|max:1000',
                 'role' => 'required | integer',
             ]);
             $user = $this->userRepository->get($id);
