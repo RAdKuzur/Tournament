@@ -49,7 +49,7 @@
                 </li>
                 @if(Auth::check())
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('auth.logout') }}">{{Auth::user()->name}} , Выйти</a>
+                        <a class="nav-link" href="{{ route('auth.logout') }}">Выйти</a>
                     </li>
                 @else
                     <li class="nav-item">

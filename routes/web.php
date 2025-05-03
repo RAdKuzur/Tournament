@@ -6,7 +6,6 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +24,10 @@ Route::get('/auth/form', [AuthController::class, 'form'])->name('auth.form');
 Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
 Route::get('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register');
+Route::get('/auth/forgot-password', [AuthController::class, 'forgotPassword'])->name('auth.forgot-password');
+Route::post('/auth/reset-password', [AuthController::class, 'resetPassword'])->name('auth.reset-password');
+Route::get('/auth/new-password/{id}', [AuthController::class, 'newPassword'])->name('auth.new-password');
+Route::post('/auth/update-password/{id}', [AuthController::class, 'updatePassword'])->name('auth.update-password');
 
 //SchoolController
 Route::get('/school/index', [SchoolController::class, 'index'])->name('school.index');

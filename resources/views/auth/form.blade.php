@@ -26,6 +26,7 @@
                 <div class="mb-3">
                     <label for="password" class="form-label">Пароль</label>
                     <input type="password" class="form-control" id="password" name="password" required>
+                    <a href="{{ route('auth.forgot-password') }}" class="text-decoration-none">Забыли пароль?</a>
                 </div>
                 <button type="submit" class="btn btn-primary">Отправить</button>
             </form>

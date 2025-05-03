@@ -20,6 +20,10 @@ class UserRepository
     public function getByUsername($username){
         return User::where('name', $username)->first();
     }
+    public function getByEmail($email)
+    {
+        return User::where('email', $email)->first();
+    }
     public function checkUnique($username, $email){
         return User::where('name', $username)->where('email', $email)->exists();
     }
