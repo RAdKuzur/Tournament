@@ -83,8 +83,12 @@ Route::get('/defence/show/{id}', [DefenceController::class, 'show'])->name('defe
 Route::get('/defence/edit/{id}', [DefenceController::class, 'edit'])->name('defence.edit');
 Route::put('/defence/update/{id}', [DefenceController::class, 'update'])->name('defence.update');
 Route::delete('/defence/destroy/{id}', [DefenceController::class, 'destroy'])->name('defence.destroy');
-Route::get('/defence/add-participant/{id}', [DefenceController::class, 'addParticipant'])->name('defence.add-participant');
-Route::post('/defence/add-participant/{id}', [DefenceController::class, 'addParticipant'])->name('defence.add-participant-post');
+Route::get('/defence/act-defence/{id}', [DefenceController::class, 'actDefence'])->name('defence.act-defence');
+Route::post('/defence/act-defence/{id}', [DefenceController::class, 'actDefence'])->name('defence.act-defence-post');
+Route::get('/defence/add-team-participant/{id}', [DefenceController::class, 'addTeamParticipant'])->name('defence.add-team-participant');
+Route::post('/defence/add-team-participant/{id}', [DefenceController::class, 'addTeamParticipant'])->name('defence.add-team-participant-post');
+Route::delete('/defence/delete-act-participant/{id}', [DefenceController::class, 'deleteActParticipant'])->name('defence.delete-act-participant');
+Route::delete('/defence/delete-defence-participant/{id}', [DefenceController::class, 'deleteDefenceParticipant'])->name('defence.delete-defence-participant');
 
 Route::get('/', function () {
     return redirect()->route('auth.form');

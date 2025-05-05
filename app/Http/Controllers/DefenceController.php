@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Components\DefenceTypeDictionary;
 use App\Http\Repositories\ActDefenceRepository;
+use App\Http\Repositories\DefenceParticipantRepository;
 use App\Http\Repositories\DefenceRepository;
+use App\Http\Repositories\StudentRepository;
 use App\Http\Services\AccessService;
+use App\Http\Services\DefenceService;
 use App\Models\Defence;
 use Illuminate\Http\Request;
 
@@ -12,16 +16,25 @@ class DefenceController extends Controller
 {
     private AccessService $accessService;
     private DefenceRepository $defenceRepository;
+    private DefenceService $defenceService;
     private ActDefenceRepository $actDefenceRepository;
+    private DefenceParticipantRepository $defenceParticipantRepository;
+    private StudentRepository $studentRepository;
     public function __construct(
         AccessService $accessService,
         DefenceRepository $defenceRepository,
-        ActDefenceRepository $actDefenceRepository
+        DefenceService $defenceService,
+        ActDefenceRepository $actDefenceRepository,
+        DefenceParticipantRepository $defenceParticipantRepository,
+        StudentRepository $studentRepository
     )
     {
         $this->accessService = $accessService;
         $this->defenceRepository = $defenceRepository;
+        $this->defenceService = $defenceService;
         $this->actDefenceRepository = $actDefenceRepository;
+        $this->defenceParticipantRepository = $defenceParticipantRepository;
+        $this->studentRepository = $studentRepository;
     }
     public function index() {
         if ($this->accessService->checkAccess()){
@@ -116,17 +129,82 @@ class DefenceController extends Controller
             return redirect()->route('defence.index');
         }
     }
-    public function addParticipant(Request $request, $id)
+    public function actDefence(Request $request, $id)
     {
-        $defence = $this->defenceRepository->get($id);
-        $participants = $this->actDefenceRepository->getByDefenceId($id);
-        if($request->all()){
-            dd($request->all());
+        if ($this->accessService->checkAccess()){
+            $defence = $this->defenceRepository->get($id);
+            if($defence->type == DefenceTypeDictionary::PERSONAL) {
+                $students = $this->studentRepository->getAll();
+                $participants = $this->defenceParticipantRepository->getByActDefences($defence->actDefences);
+                if($request->isMethod('POST')) {
+                    $data = $request->validate([
+                        'participants' => 'array|max:1000',
+                    ]);
+                    $this->defenceService->addPersonalDefence($data['participants'], $defence->id);
+                    /*$actDefence = $this->actDefenceRepository->create('Личная защита.', $defence->id);
+                    $this->defenceService->addTeamParticipants($actDefence->id, $data['participants']);*/
+                    return redirect()->route('defence.act-defence', ['id' => $defence->id]);
+                }
+                return view('defence.add-personal-participant', [
+                        'defence' => $defence,
+                        'students' => $students,
+                        'participants' => $participants
+                    ]
+                );
+            }
+            else {
+                $actDefences = $this->actDefenceRepository->getByDefenceId($id);
+                if($request->isMethod('POST')) {
+                    $data = $request->validate([
+                        'team' => 'array|max:1000',
+                    ]);
+                    $this->defenceService->addTeams($data['team'], $defence->id);
+                    return redirect()->route('defence.act-defence', ['id' => $defence->id]);
+                }
+                return view('defence.add-team-participant', [
+                        'defence' => $defence,
+                        'actDefences' => $actDefences
+                    ]
+                );
+            }
         }
-        return view('defence.add-participant', [
-                'defence' => $defence,
-                'participants' => $participants
-            ]
-        );
+        else {
+            return redirect()->route('defence.index');
+        }
+    }
+    public function addTeamParticipant(Request $request, $id)
+    {
+        $team = $this->actDefenceRepository->get($id);
+        $participants = $this->defenceParticipantRepository->getParticipants($id);
+        $students = $this->studentRepository->getAll();
+        if ($this->accessService->checkAccess()) {
+            if ($request->isMethod('POST')) {
+                $data = $request->validate([
+                    'participants' => 'array|max:1000',
+                ]);
+                $this->defenceService->addTeamParticipants($team->id, $data['participants']);
+                return redirect()->route('defence.add-team-participant', ['id' => $team->id]);
+            }
+        }
+        return view('defence.team-participant', [
+            'team' => $team,
+            'participants' => $participants,
+            'students' => $students
+        ]);
+    }
+    public function deleteActParticipant($id)
+    {
+        $defenceId = ($this->actDefenceRepository->get($id))->defence_id;
+        $this->actDefenceRepository->delete($id);
+        return redirect()->route('defence.act-defence', ['id' => $defenceId]);
+    }
+    public function deleteDefenceParticipant($id)
+    {
+        $team = $this->defenceParticipantRepository->get($id);
+        $this->defenceParticipantRepository->delete($id);
+        if ($team->actDefence->defence->type == DefenceTypeDictionary::PERSONAL) {
+            $this->actDefenceRepository->delete($team->actDefence->id);
+        }
+        return redirect()->route('defence.act-defence', ['id' => $team->actDefence->defence->id]);
     }
 }

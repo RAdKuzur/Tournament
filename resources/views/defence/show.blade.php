@@ -27,7 +27,7 @@
 
         <a href="{{ route('defence.index') }}" class="btn btn-secondary">Назад к списку</a>
         <a href="{{ route('defence.edit', $defence->id) }}" class="btn btn-warning">Изменить</a>
-        <a href="{{ route('defence.add-participant', $defence->id) }}" class="btn btn-primary">Добавить участников</a>
+        <a href="{{ route('defence.act-defence', $defence->id) }}" class="btn btn-primary">Добавить участников</a>
     </div>
 
 @endsection
