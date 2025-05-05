@@ -8,7 +8,7 @@
     <div class="card shadow-sm border-0">
         <div class="card-body">
             <h1 class="h4 mb-4">Список защит</h1>
-            <a href="{{ route('defence.create') }}" class="btn btn-sm btn-success">Создать школу</a>
+            <a href="{{ route('defence.create') }}" class="btn btn-sm btn-success">Создать защиту</a>
             @if($defences->count())
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
@@ -43,7 +43,7 @@
                 </div>
             @else
                 <div class="alert alert-info mb-0">
-                    Пока нет ни одной школы.
+                    Пока нет ни одной защиты.
                 </div>
             @endif
         </div>
