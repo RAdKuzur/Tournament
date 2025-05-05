@@ -174,37 +174,52 @@ class DefenceController extends Controller
     }
     public function addTeamParticipant(Request $request, $id)
     {
-        $team = $this->actDefenceRepository->get($id);
-        $participants = $this->defenceParticipantRepository->getParticipants($id);
-        $students = $this->studentRepository->getAll();
         if ($this->accessService->checkAccess()) {
-            if ($request->isMethod('POST')) {
-                $data = $request->validate([
-                    'participants' => 'array|max:1000',
-                ]);
-                $this->defenceService->addTeamParticipants($team->id, $data['participants']);
-                return redirect()->route('defence.add-team-participant', ['id' => $team->id]);
+            $team = $this->actDefenceRepository->get($id);
+            $participants = $this->defenceParticipantRepository->getParticipants($id);
+            $students = $this->studentRepository->getAll();
+            if ($this->accessService->checkAccess()) {
+                if ($request->isMethod('POST')) {
+                    $data = $request->validate([
+                        'participants' => 'array|max:1000',
+                    ]);
+                    $this->defenceService->addTeamParticipants($team->id, $data['participants']);
+                    return redirect()->route('defence.add-team-participant', ['id' => $team->id]);
+                }
             }
+            return view('defence.team-participant', [
+                'team' => $team,
+                'participants' => $participants,
+                'students' => $students
+            ]);
         }
-        return view('defence.team-participant', [
-            'team' => $team,
-            'participants' => $participants,
-            'students' => $students
-        ]);
+        else {
+            return redirect()->route('defence.index');
+        }
     }
     public function deleteActParticipant($id)
     {
-        $defenceId = ($this->actDefenceRepository->get($id))->defence_id;
-        $this->actDefenceRepository->delete($id);
-        return redirect()->route('defence.act-defence', ['id' => $defenceId]);
+        if ($this->accessService->checkAccess()) {
+            $defenceId = ($this->actDefenceRepository->get($id))->defence_id;
+            $this->actDefenceRepository->delete($id);
+            return redirect()->route('defence.act-defence', ['id' => $defenceId]);
+        }
+        else {
+            return redirect()->route('defence.index');
+        }
     }
     public function deleteDefenceParticipant($id)
     {
-        $team = $this->defenceParticipantRepository->get($id);
-        $this->defenceParticipantRepository->delete($id);
-        if ($team->actDefence->defence->type == DefenceTypeDictionary::PERSONAL) {
-            $this->actDefenceRepository->delete($team->actDefence->id);
+        if ($this->accessService->checkAccess()) {
+            $team = $this->defenceParticipantRepository->get($id);
+            $this->defenceParticipantRepository->delete($id);
+            if ($team->actDefence->defence->type == DefenceTypeDictionary::PERSONAL) {
+                $this->actDefenceRepository->delete($team->actDefence->id);
+            }
+            return redirect()->route('defence.act-defence', ['id' => $team->actDefence->defence->id]);
         }
-        return redirect()->route('defence.act-defence', ['id' => $team->actDefence->defence->id]);
+        else {
+            return redirect()->route('defence.index');
+        }
     }
 }

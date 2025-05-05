@@ -57,8 +57,10 @@ class RoleDictionary extends BaseDictionary
         '/defence/update',
         '/defence/destroy',
         '/defence/act-defence',
-        'defence/add-participant',
         '/defence/add-team-participant',
+        '/defence/delete-act-participant',
+        '/defence/delete-defence-participant'
+
     ];
     public const JUDGE_AVAILABLE_URLS = [
         // School routes
