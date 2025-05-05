@@ -33,6 +33,9 @@
         <div class="collapse navbar-collapse" id="navbarContent">
             <ul class="navbar-nav ms-auto mb-2 mb-md-0">
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('defence.index') }}">Защиты</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ route('tournament.index') }}">Турниры</a>
                 </li>
                 <li class="nav-item">

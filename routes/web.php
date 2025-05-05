@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DefenceController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeamController;
@@ -73,6 +74,15 @@ Route::get('/user/show/{id}', [UserController::class, 'show'])->name('user.show'
 Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
 Route::put('/user/update/{id}', [UserController::class, 'update'])->name('user.update');
 Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+
+//DefenceController
+Route::get('/defence/index', [DefenceController::class, 'index'])->name('defence.index');
+Route::get('/defence/create', [DefenceController::class, 'create'])->name('defence.create');
+Route::post('/defence/store', [DefenceController::class, 'store'])->name('defence.store');
+Route::get('/defence/show/{id}', [DefenceController::class, 'show'])->name('defence.show');
+Route::get('/defence/edit/{id}', [DefenceController::class, 'edit'])->name('defence.edit');
+Route::put('/defence/update/{id}', [DefenceController::class, 'update'])->name('defence.update');
+Route::delete('/defence/destroy/{id}', [DefenceController::class, 'destroy'])->name('defence.destroy');
 
 Route::get('/', function () {
     return redirect()->route('auth.form');

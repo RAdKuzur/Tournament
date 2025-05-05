@@ -48,6 +48,14 @@ class RoleDictionary extends BaseDictionary
         '/user/edit',
         '/user/update',
         '/user/destroy',
+        //Defences routes
+        '/defence/index',
+        '/defence/create',
+        '/defence/store',
+        '/defence/show',
+        '/defence/edit',
+        '/defence/update',
+        '/defence/destroy',
     ];
     public const JUDGE_AVAILABLE_URLS = [
         // School routes
@@ -62,6 +70,9 @@ class RoleDictionary extends BaseDictionary
         // Team routes
         '/team/index',
         '/team/show',
+        //Defences routes
+        '/defence/index',
+        '/defence/show',
     ];
     public const JUROR_AVAILABLE_URLS = [
         // School routes
@@ -76,6 +87,9 @@ class RoleDictionary extends BaseDictionary
         // Team routes
         '/team/index',
         '/team/show',
+        //Defences routes
+        '/defence/index',
+        '/defence/show',
     ];
     public function __construct()
     {

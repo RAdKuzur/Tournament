@@ -12,7 +12,9 @@ class Defence extends Model
     protected $table = 'defence';
 
     protected $fillable = [
-        'name'
+        'name',
+        'type',
+        'date'
     ];
 
     public function actDefences()
