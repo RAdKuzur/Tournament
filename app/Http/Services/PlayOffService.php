@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 
+use App\Http\Repositories\StudentRepository;
 use App\Http\Repositories\TeamRepository;
 use App\Http\Repositories\TeamStudentRepository;
 use App\Http\Repositories\TournamentRepository;
@@ -15,6 +16,8 @@ class PlayOffService
     private TeamStudentRepository $teamStudentRepository;
     private GameRepository $gameRepository;
 
+    private StudentRepository $studentRepository;
+
     public function __construct(
         TeamRepository $teamRepository,
         TournamentRepository $tournamentRepository,
@@ -25,6 +28,38 @@ class PlayOffService
         $this->tournamentRepository = $tournamentRepository;
         $this->teamStudentRepository = $teamStudentRepository;
         $this->gameRepository = $gameRepository;
+    }
+
+    public function generateInitialPlayOffRound(int $tournamentId): array
+    {
+        $teams = $this->teamRepository->getAllByTournament($tournamentId);
+
+        if (count($teams) < 2 || count($teams) % 2 != 0) {
+            throw new \Exception('Необходимо четное количество команд (минимум 2) для формирования пар');
+        }
+
+        // Получаем команды с их суммарным olymp_score
+        $teamsWithScores = [];
+        foreach ($teams as $team) {
+            $students = $this->teamStudentRepository->getParticipantsByTeamId($team->id);
+            $totalScore = $students->sum(fn($ts) => $ts->student->olymp_score);
+            $teamsWithScores[$team->id] = $totalScore;
+        }
+
+        // Сортируем команды по убыванию суммарного балла
+        arsort($teamsWithScores);
+        $sortedTeamIds = array_keys($teamsWithScores);
+
+        // Формируем пары: 1vs2, 3vs4, 5vs6...
+        $pairs = [];
+        for ($i = 0; $i < count($sortedTeamIds); $i += 2) {
+            $pairs[] = [
+                $sortedTeamIds[$i],
+                $sortedTeamIds[$i + 1]
+            ];
+        }
+
+        return $pairs;
     }
 
     /**
@@ -82,7 +117,7 @@ class PlayOffService
      */
     private function determineGameWinner(Game $game): ?int
     {
-        return $game->getWinners();
+        return $game->getGameWinner();
     }
 
     /**
@@ -94,6 +129,11 @@ class PlayOffService
         return array_chunk($teamIds, 2);
     }
 
+    private function initialpairteams(array $teamIds): array
+    {
+        shuffle($teamIds); // Перемешиваем для случайного распределения
+        return array_chunk($teamIds, 2);
+    }
     /**
      * Получает текущий тур турнира
      */

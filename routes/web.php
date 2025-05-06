@@ -7,6 +7,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DrawController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -93,6 +94,9 @@ Route::delete('/defence/delete-defence-participant/{id}', [DefenceController::cl
 Route::get('/defence/leaderboard/{id}', [DefenceController::class, 'leaderboard'])->name('defence.leaderboard');
 Route::get('/defence/score/{id}', [DefenceController::class, 'score'])->name('defence.score');
 Route::get('/defence/change-score/{id}/{type}/{score}', [DefenceController::class, 'changeScore'])->name('defence.change-score');
+
+//DrawController
+Route::get('/draw/index/{id}', [DrawController::class, 'index'])->name('draw.index');
 
 Route::get('/', function () {
     return redirect()->route('auth.form');

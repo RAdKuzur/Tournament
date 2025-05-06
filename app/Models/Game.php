@@ -41,8 +41,8 @@ class Game extends Model
     public function getGameWinner()
     {
         // Получаем ID участников команд
-        $firstTeamStudentIds = $this->firstTeam->teamStudents()->pluck('id');
-        $secondTeamStudentIds = $this->secondTeam->teamStudents()->pluck('id');
+        $firstTeamStudentIds = $this->firstTeam->teamStudents->pluck('id');
+        $secondTeamStudentIds = $this->secondTeam->teamStudents->pluck('id');
 
         // Суммируем очки через запросы к БД
         $firstTeamScore = $this->participants()

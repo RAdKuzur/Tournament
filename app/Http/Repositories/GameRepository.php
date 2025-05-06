@@ -6,13 +6,13 @@ use App\Models\Game;
 
 class GameRepository
 {
-    public function create($first_team_id,$second_team_id,$tournament_id,$tour_id)
+    public function create($first_team_id,$second_team_id,$tournament_id,$tour)
     {
         return Game::create([
             'first_team_id' => $first_team_id,
             'second_team_id' => $second_team_id,
            'tournament_id' => $tournament_id,
-            'tour' => $tour_id,
+            'tour' => $tour,
         ]);
     }
 
@@ -38,10 +38,9 @@ class GameRepository
         return Game::where('id', $gameId)->update($results);
     }
 
-    public function getGamesWithParticipants(int $tournamentId)
+    public function getAllGamesFromTournament(int $tournamentId)
     {
         return Game::where('tournament_id', $tournamentId)
-            ->with(['participants.teamStudent'])
             ->get();
     }
 

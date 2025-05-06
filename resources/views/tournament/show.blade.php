@@ -29,5 +29,6 @@
 
         <a href="{{ route('tournament.index') }}" class="btn btn-secondary">Назад к списку</a>
         <a href="{{ route('tournament.edit', $tournament->id) }}" class="btn btn-warning">Изменить</a>
+        <a href="{{ route('draw.index', $tournament->id) }}" class="btn btn-success">Перейти к жеребьевке</a>
     </div>
 @endsection
