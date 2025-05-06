@@ -37,4 +37,31 @@ class Game extends Model
     {
         return $this->hasMany(TeamStudentParticipant::class);
     }
+
+    public function getGameWinner()
+    {
+        // Получаем ID участников команд
+        $firstTeamStudentIds = $this->firstTeam->teamStudents()->pluck('id');
+        $secondTeamStudentIds = $this->secondTeam->teamStudents()->pluck('id');
+
+        // Суммируем очки через запросы к БД
+        $firstTeamScore = $this->participants()
+            ->whereIn('team_student_id', $firstTeamStudentIds)
+            ->sum('score');
+
+        $secondTeamScore = $this->participants()
+            ->whereIn('team_student_id', $secondTeamStudentIds)
+            ->sum('score');
+
+        // Определяем победителя
+        if ($firstTeamScore > $secondTeamScore) {
+            return $this->first_team_id;
+        }
+
+        if ($secondTeamScore > $firstTeamScore) {
+            return $this->second_team_id;
+        }
+
+        return null;
+    }
 }
