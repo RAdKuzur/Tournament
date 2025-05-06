@@ -52,7 +52,8 @@ class TournamentController extends Controller
                     'name' => $data['name'],
                     'begin_date' => $data['begin_date'],
                     'finish_date' => $data['finish_date'],
-                    'type' => $data['type']
+                    'type' => $data['type'],
+                    'current_tour' => Tournament::INIT_TOUR
                 ]);
                 return redirect()->route('tournament.show', ['id' => $tournament->id]);
             }
