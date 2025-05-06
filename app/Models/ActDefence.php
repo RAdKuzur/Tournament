@@ -16,7 +16,14 @@ class ActDefence extends Model
         'type',
         'name'
     ];
-
+    public function getTotalScore()
+    {
+        $score = 0;
+        foreach ($this->participants as $participant) {
+            $score += $participant->score;
+        }
+        return $score;
+    }
     public function defence()
     {
         return $this->belongsTo(Defence::class);

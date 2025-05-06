@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class DefenceParticipant extends Model
 {
     use HasFactory;
-
+    public const PLUS = 0;
+    public const MINUS = 1;
     protected $table = 'defence_participant';
 
     protected $fillable = [
