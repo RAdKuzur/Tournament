@@ -40,6 +40,7 @@ class RoleDictionary extends BaseDictionary
         '/team/edit',
         '/team/update',
         '/team/destroy',
+        '/team/by-school',
         //Users routes
         '/user/index',
         '/user/create',

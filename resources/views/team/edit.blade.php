@@ -35,26 +35,13 @@
             <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $team->name) }}" required>
         </div>
         <div class="mb-3">
-            <label for="tournament" class="form-label">Выберите турнир</label>
-            <select id="tournament" name="tournament_id" class="form-select" required>
-                <option value="" disabled>— выберите турнир —</option>
-                @foreach($tournaments as $tournament)
-                    <option value="{{ $tournament->id }}" {{ $team->tournament_id == $tournament->id ? 'selected' : '' }}>
-                        {{ $tournament->name }}
-                    </option>
-                @endforeach
-            </select>
+            <label for="tournament" class="form-label">Турнир</label>
+            <input type="text" class="form-control" value="{{$team->tournament->name}}" readonly/>
+
         </div>
         <div class="mb-3">
             <label for="school" class="form-label">Выберите школу</label>
-            <select id="school" name="school_id" class="form-select" required>
-                <option value="" disabled>— выберите школу —</option>
-                @foreach($schools as $school)
-                    <option value="{{ $school->id }}" {{ $team->school_id == $school->id ? 'selected' : '' }}>
-                        {{ $school->name }}
-                    </option>
-                @endforeach
-            </select>
+            <input id="school" class="form-control" type="text" value="{{$team->school->name}}" readonly/>
         </div>
         <div class="mb-3">
             <label for="students">Выберите участников:</label>

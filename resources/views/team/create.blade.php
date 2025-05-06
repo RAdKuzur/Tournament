@@ -54,10 +54,8 @@
         </div>
         <div class="mb-3">
             <label for="students">Выберите участников:</label>
-            <select name="students[]" multiple class="form-control select2">
-                @foreach($students as $student)
-                    <option value="{{ $student->id }}">{{ $student->getFullFio() }}</option>
-                @endforeach
+            <select name="students[]" multiple class="form-control select2" id="students-select" disabled>
+                <option value="" disabled>Сначала выберите школу</option>
             </select>
         </div>
         <button type="submit" class="btn btn-primary">Отправить</button>
@@ -65,4 +63,51 @@
 </div>
 </body>
 </html>
+
+<script>
+    $(document).ready(function() {
+        // Инициализация Select2
+        $('.select2').select2({
+            placeholder: 'Выберите участников',
+            allowClear: true
+        });
+
+        // Обработчик изменения школы
+        $('#school').change(function() {
+            const schoolId = $(this).val();
+            const studentsSelect = $('#students-select');
+
+            if(schoolId) {
+                // Включаем поле и показываем загрузку
+                studentsSelect.prop('disabled', false);
+                studentsSelect.html('<option value="">Загрузка студентов...</option>');
+
+                // AJAX-запрос для получения студентов
+                $.ajax({
+                    url: '/team/by-school/' + schoolId,
+                    type: 'GET',
+                    success: function(data) {
+                        studentsSelect.empty();
+                        $.each(data, function(key, student) {
+                            studentsSelect.append(
+                                $('<option></option>')
+                                    .val(student.id)
+                                    .text(student.surname + " " + student.name + " " + student.patronymic)
+                            );
+                        });
+                        studentsSelect.trigger('change'); // Обновляем Select2
+                    },
+                    error: function() {
+                        studentsSelect.html('<option value="">Ошибка загрузки студентов</option>');
+                    }
+                });
+            } else {
+                studentsSelect.prop('disabled', true).html('<option value="" disabled>Сначала выберите школу</option>');
+            }
+        });
+    });
+
+
+</script>
+
 @endsection

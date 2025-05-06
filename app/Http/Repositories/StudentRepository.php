@@ -9,6 +9,10 @@ class StudentRepository
     public function getAll(){
         return Student::all();
     }
+
+    public function getBySchoolId($id) {
+        return Student::where('school_id', $id)->get();
+    }
     public function get($id){
         return Student::find($id);
     }

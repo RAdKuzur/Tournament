@@ -65,6 +65,7 @@ Route::get('/team/show/{id}', [TeamController::class, 'show'])->name('team.show'
 Route::get('/team/edit/{id}', [TeamController::class, 'edit'])->name('team.edit');
 Route::put('/team/update/{id}', [TeamController::class, 'update'])->name('team.update');
 Route::delete('/team/destroy/{id}', [TeamController::class, 'destroy'])->name('team.destroy');
+Route::get('/team/by-school/{id}', [TeamController::class, 'getBySchool'])->name('team.getBySchool');
 
 //UserController
 Route::get('/user/index', [UserController::class, 'index'])->name('user.index');

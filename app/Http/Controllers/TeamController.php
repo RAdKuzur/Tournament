@@ -101,20 +101,27 @@ class TeamController extends Controller
     public function edit($id) {
         if($this->accessService->checkAccess()) {
             $team = $this->teamRepository->get($id);
-            $tournaments = $this->tournamentRepository->getAll();
-            $students = $this->studentRepository->getAll();
-            $schools = $this->schoolRepository->getAll();
+            $students = $this->studentRepository->getBySchoolId($team->school->id);
             return view('team.edit', [
                 'team' => $team,
-                'tournaments' => $tournaments,
                 'students' => $students,
-                'schools' => $schools,
             ]);
         }
         else {
             return redirect()->route('team.index');
         }
     }
+
+    public function getBySchool($id) {
+        if($this->accessService->checkAccess()) {
+            $students = $this->studentRepository->getBySchoolId($id);
+            return response()->json($students);
+        } else {
+            return redirect()->route('team.index');
+        }
+    }
+
+
     public function update(Request $request, $id) {
         if($this->accessService->checkAccess()) {
             $team = $this->teamRepository->get($id);
