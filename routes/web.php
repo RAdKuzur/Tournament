@@ -91,6 +91,9 @@ Route::get('/defence/add-team-participant/{id}', [DefenceController::class, 'add
 Route::post('/defence/add-team-participant/{id}', [DefenceController::class, 'addTeamParticipant'])->name('defence.add-team-participant-post');
 Route::delete('/defence/delete-act-participant/{id}', [DefenceController::class, 'deleteActParticipant'])->name('defence.delete-act-participant');
 Route::delete('/defence/delete-defence-participant/{id}', [DefenceController::class, 'deleteDefenceParticipant'])->name('defence.delete-defence-participant');
+Route::get('/defence/leaderboard/{id}', [DefenceController::class, 'leaderboard'])->name('defence.leaderboard');
+Route::get('/defence/score/{id}', [DefenceController::class, 'score'])->name('defence.score');
+Route::get('/defence/change-score/{id}/{type}/{score}', [DefenceController::class, 'changeScore'])->name('defence.change-score');
 
 //DrawController
 Route::get('/draw/index/{id}', [DrawController::class, 'index'])->name('draw.index');

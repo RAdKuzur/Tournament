@@ -24,6 +24,9 @@ class AuthController extends Controller
 
     public function form()
     {
+        if (Auth::check()) {
+            return redirect()->route('tournament.index');
+        }
         return view('auth.form');
     }
     public function login(Request $request){

@@ -6,6 +6,7 @@ use App\Components\DefenceTypeDictionary;
 use App\Http\Repositories\ActDefenceRepository;
 use App\Http\Repositories\DefenceParticipantRepository;
 use App\Http\Repositories\DefenceRepository;
+use App\Http\Repositories\HistoryRepository;
 use App\Http\Repositories\StudentRepository;
 use App\Http\Services\AccessService;
 use App\Http\Services\DefenceService;
@@ -20,13 +21,15 @@ class DefenceController extends Controller
     private ActDefenceRepository $actDefenceRepository;
     private DefenceParticipantRepository $defenceParticipantRepository;
     private StudentRepository $studentRepository;
+    private HistoryRepository $historyRepository;
     public function __construct(
         AccessService $accessService,
         DefenceRepository $defenceRepository,
         DefenceService $defenceService,
         ActDefenceRepository $actDefenceRepository,
         DefenceParticipantRepository $defenceParticipantRepository,
-        StudentRepository $studentRepository
+        StudentRepository $studentRepository,
+        HistoryRepository $historyRepository
     )
     {
         $this->accessService = $accessService;
@@ -35,6 +38,7 @@ class DefenceController extends Controller
         $this->actDefenceRepository = $actDefenceRepository;
         $this->defenceParticipantRepository = $defenceParticipantRepository;
         $this->studentRepository = $studentRepository;
+        $this->historyRepository = $historyRepository;
     }
     public function index() {
         if ($this->accessService->checkAccess()){
@@ -217,6 +221,45 @@ class DefenceController extends Controller
                 $this->actDefenceRepository->delete($team->actDefence->id);
             }
             return redirect()->route('defence.act-defence', ['id' => $team->actDefence->defence->id]);
+        }
+        else {
+            return redirect()->route('defence.index');
+        }
+    }
+    public function leaderboard($id)
+    {
+        if ($this->accessService->checkAccess()) {
+            $acts = $this->actDefenceRepository->getByDefenceId($id);
+            $defence = $this->defenceRepository->get($id);
+            return view('defence.leaderboard', [
+                'acts' => $acts,
+                'defence' => $defence
+            ]);
+        }
+        else {
+            return redirect()->route('defence.index');
+        }
+    }
+    public function score($id)
+    {
+        if ($this->accessService->checkAccess()) {
+            $actDefence  = $this->actDefenceRepository->get($id);
+            $participants = $this->defenceParticipantRepository->getParticipants($actDefence->id);
+            return view('defence.score', [
+                'actDefence' => $actDefence,
+                'participants' => $participants
+            ]);
+        }
+        else {
+            return redirect()->route('defence.index');
+        }
+    }
+    public function changeScore($id, $type, $score){
+        if ($this->accessService->checkAccess()) {
+            $participant = $this->defenceParticipantRepository->get($id);
+            $this->defenceParticipantRepository->changeScore($participant, $type, $score);
+            $this->historyRepository->create($id, $type, $score);
+            return redirect()->route('defence.score', ['id' => $participant->actDefence->id]);
         }
         else {
             return redirect()->route('defence.index');

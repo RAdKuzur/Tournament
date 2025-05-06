@@ -35,5 +35,17 @@ class DefenceParticipantRepository
     public function delete($id){
         return DefenceParticipant::destroy($id);
     }
-
+    public function changeScore($participant, $type, $score)
+    {
+        switch ($type) {
+            case DefenceParticipant::PLUS:
+                $participant->score = $participant->score + $score;
+                return $participant->save();
+            case DefenceParticipant::MINUS:
+                $participant->score = $participant->score - $score;
+                return $participant->save();
+            default:
+                return null;
+        }
+    }
 }
