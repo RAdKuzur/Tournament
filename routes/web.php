@@ -94,6 +94,7 @@ Route::delete('/defence/delete-defence-participant/{id}', [DefenceController::cl
 Route::get('/defence/leaderboard/{id}', [DefenceController::class, 'leaderboard'])->name('defence.leaderboard');
 Route::get('/defence/score/{id}', [DefenceController::class, 'score'])->name('defence.score');
 Route::get('/defence/change-score/{id}/{type}/{score}', [DefenceController::class, 'changeScore'])->name('defence.change-score');
+Route::get('/defence/leaderboard-update/{id}', [DefenceController::class, 'leaderboardUpdate'])->name('defence.leaderboard-update');
 
 //DrawController
 Route::get('/draw/index/{id}', [DrawController::class, 'index'])->name('draw.index');

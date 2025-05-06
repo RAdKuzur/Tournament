@@ -265,4 +265,15 @@ class DefenceController extends Controller
             return redirect()->route('defence.index');
         }
     }
+    public function leaderboardUpdate($id)
+    {
+        if ($this->accessService->checkAccess()) {
+            $acts = $this->actDefenceRepository->getByDefenceId($id);
+            $defence = $this->defenceRepository->get($id);
+            return view('defence.leaderboard-update', compact('acts', 'defence'));
+        }
+        else {
+            return redirect()->route('defence.index');
+        }
+    }
 }
