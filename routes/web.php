@@ -7,6 +7,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DrawController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -90,6 +91,9 @@ Route::get('/defence/add-team-participant/{id}', [DefenceController::class, 'add
 Route::post('/defence/add-team-participant/{id}', [DefenceController::class, 'addTeamParticipant'])->name('defence.add-team-participant-post');
 Route::delete('/defence/delete-act-participant/{id}', [DefenceController::class, 'deleteActParticipant'])->name('defence.delete-act-participant');
 Route::delete('/defence/delete-defence-participant/{id}', [DefenceController::class, 'deleteDefenceParticipant'])->name('defence.delete-defence-participant');
+
+//DrawController
+Route::get('/draw/index/{id}', [DrawController::class, 'index'])->name('draw.index');
 
 Route::get('/', function () {
     return redirect()->route('auth.form');
