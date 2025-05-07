@@ -10,6 +10,7 @@ use App\Http\Repositories\GameRepository;
 use App\Http\Repositories\StudentRepository;
 use App\Http\Repositories\TournamentRepository;
 use App\Http\Services\AccessService;
+use App\Http\Services\PlayOffService;
 use App\Models\Defence;
 use App\Models\Game;
 use App\Models\Tournament;
@@ -21,29 +22,57 @@ class DrawController extends Controller
     //
     private GameRepository $gameRepository;
     private AccessService $accessService;
+
+    private PlayOffService $playOffService;
     public function __construct(
         GameRepository $gameRepository,
-        AccessService $accessService
+        AccessService $accessService,
+        PlayOffService $playOffService
     )
     {
         $this->gameRepository = $gameRepository;
         $this->accessService = $accessService;
+        $this->playOffService = $playOffService;
     }
 
-    public function index($tournament_id) {
+    public function index($tournament_id)
+    {
+        if (!$this->accessService->checkAccess()) {
+            return redirect()->route('auth.logout');
+        }
+
         $games = $this->gameRepository->getAllGamesFromTournament($tournament_id);
-        if (count($games)>0)
-        {
-            return view('Draw.index', ['games' => $games]);
+
+        if (count($games) == 0) {
+            try {
+                $pairs = $this->playOffService->generateInitialPlayOffRound($tournament_id);
+                $this->createGamesFromPairs($pairs, $tournament_id);
+
+                // Обновляем список игр после создания
+                $games = $this->gameRepository->getAllGamesFromTournament($tournament_id);
+
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->with('error', $e->getMessage());
+            }
         }
 
         return view('Draw.index', ['games' => $games]);
-
-        /*if($this->accessService->checkAccess()) {
-
-        }
-        else {
-            return redirect()->route('auth.logout');
-        }*/
     }
+
+    private function createGamesFromPairs(array $pairs, int $tournamentId): void
+    {
+        foreach ($pairs as $pair) {
+            Game::create([
+                'first_team_id' => $pair[0],
+                'second_team_id' => $pair[1],
+                'tournament_id' => $tournamentId,
+                'tour' => Tournament::INIT_TOUR,
+                'is_playoff' => true // если нужно пометить как плей-офф
+            ]);
+        }
+    }
+
+
+
 }

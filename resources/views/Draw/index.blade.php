@@ -42,13 +42,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                <!-- Пагинация -->
-                @if($games->hasPages())
-                    <div class="mt-3">
-                        {{ $games->links() }}
-                    </div>
-                @endif
             @else
                 <div class="alert alert-info mb-0">
                     Пока нет запланированных игр.
