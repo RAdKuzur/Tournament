@@ -65,7 +65,6 @@ class DrawController extends Controller
                         $this->createGamesFromPairs($pairs, $tournament_id);
                         break;
                 }
-s
                 // Обновляем список игр после создания
                 $games = $this->gameRepository->getAllGamesFromTournament($tournament_id);
 
