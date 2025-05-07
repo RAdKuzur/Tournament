@@ -62,7 +62,7 @@ class DrawController extends Controller
                         break;
                     case TournamentTypeDictionary::PLAY_OFF:
                         $pairs = $this->playOffService->generateInitialPlayOffRound($tournament_id);
-                        $this->createGamesFromPairs($pairs, $tournament_id);
+                        $this->playOffService->createGamesFromPairs($pairs, $tournament_id);
                         break;
                 }
                 // Обновляем список игр после создания
@@ -77,17 +77,38 @@ class DrawController extends Controller
         return view('Draw.index', ['games' => $games]);
     }
 
-    private function createGamesFromPairs(array $pairs, int $tournamentId): void
+    public function Concluderound($tournament_id)
     {
-        foreach ($pairs as $pair) {
-            Game::create([
-                'first_team_id' => $pair[0],
-                'second_team_id' => $pair[1],
-                'tournament_id' => $tournamentId,
-                'tour' => Tournament::INIT_TOUR,
-            ]);
+        if (!$this->accessService->checkAccess()) {
+            return redirect()->route('auth.logout');
         }
+
+        $games = $this->gameRepository->getAllGamesFromTournament($tournament_id);
+
+        if (count($games) == 0) {
+            try {
+                $tournament = $this->tournamentRepository->get($tournament_id);
+                switch ($tournament->type) {
+                    case TournamentTypeDictionary::SWISS:
+                        $this->drawSwissService->createNewGame($tournament_id);
+                        break;
+                    case TournamentTypeDictionary::PLAY_OFF:
+                        $pairs = $this->playOffService->generateNextPlayOffRound($tournament_id);
+                        $this->playOffService->createGamesFromPairs($pairs, $tournament_id);
+                        break;
+                }
+                // Обновляем список игр после создания
+                $games = $this->gameRepository->getAllGamesFromTournament($tournament_id);
+
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->with('error', $e->getMessage());
+            }
+        }
+
+        return view('Draw.index', ['games' => $games]);
     }
+
 
 
 

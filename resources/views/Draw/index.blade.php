@@ -32,8 +32,8 @@
                                 <td class="fw-semibold">{{ $game->secondTeam->name }}</td>
                                 @can('manage-games')
                                     <td class="text-end">
-                                        <a href="{{ route('games.edit', $game->id) }}" class="btn btn-sm btn-outline-primary">
-                                            Внести результаты
+                                        <a href="{{ route('draw.edit-score', $game->id) }}" class="btn btn-sm btn-outline-primary">
+                                            Изменить счет
                                         </a>
                                     </td>
                                 @endcan
@@ -41,6 +41,9 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <a href="{{ route('draw.conclude-round', ) }}" class="btn btn-sm btn-outline-primary">
+                        Изменить счет
+                    </a>
                 </div>
             @else
                 <div class="alert alert-info mb-0">

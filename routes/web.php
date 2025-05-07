@@ -98,7 +98,8 @@ Route::get('/defence/leaderboard-update/{id}', [DefenceController::class, 'leade
 
 //DrawController
 Route::get('/draw/index/{id}', [DrawController::class, 'index'])->name('draw.index');
-
+Route::get('/draw/edit-score/{id}', [DrawController::class, 'edit-score'])->name('draw.edit-score');
+Route::get('/draw/conclude-round/{id}', [DrawController::class, 'edit-score'])->name('draw.edit-score');
 Route::get('/', function () {
     return redirect()->route('auth.form');
 });

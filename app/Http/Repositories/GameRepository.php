@@ -29,13 +29,43 @@ class GameRepository
             ->get();
     }
 
+    /**
+     * Получает текущий тур турнира
+     */
+    public function getCurrentTour(int $tournamentId): int
+    {
+        $lastGame = Game::where('tournament_id', $tournamentId)
+            ->orderBy('tour', 'desc')
+            ->first();
+
+        return $lastGame ? $lastGame->tour : 0;
+    }
+
     public function getAll(){
         return Game::all();
     }
 
-    public function updateResults(int $gameId, array $results)
+    public function updateScore(int $gameId, int $teamId, int $newScore): bool
     {
-        return Game::where('id', $gameId)->update($results);
+        $game = Game::findOrFail($gameId);
+
+        // Проверяем, что переданный teamId принадлежит этой игре
+        if ($game->first_team_id !== $teamId && $game->second_team_id !== $teamId) {
+            throw new \Exception("Команда $teamId не участвует в этой игре");
+        }
+
+        // Обновляем счёт через участников (TeamStudentParticipant)
+        $teamStudents = TeamStudent::where('team_id', $teamId)->pluck('id');
+
+        // Если нужно обновить всех участников команды одинаково:
+        TeamStudentParticipant::where('game_id', $gameId)
+            ->whereIn('team_student_id', $teamStudents)
+            ->update(['score' => $newScore]);
+
+        // Пересчитываем победителя игры
+        $game->determineWinner();
+
+        return true;
     }
 
     public function getAllGamesFromTournament(int $tournamentId)

@@ -8,6 +8,8 @@ use App\Http\Repositories\TeamRepository;
 use App\Http\Repositories\TeamStudentRepository;
 use App\Http\Repositories\TournamentRepository;
 use App\Http\Repositories\GameRepository;
+use App\Models\Game;
+use App\Models\Tournament;
 
 class PlayOffService
 {
@@ -62,13 +64,25 @@ class PlayOffService
         return $pairs;
     }
 
+    public function createGamesFromPairs(array $pairs, int $tournamentId): void
+    {
+        foreach ($pairs as $pair) {
+            Game::create([
+                'first_team_id' => $pair[0],
+                'second_team_id' => $pair[1],
+                'tournament_id' => $tournamentId,
+                'tour' => Tournament::INIT_TOUR,
+            ]);
+        }
+    }
+
     /**
      * Генерирует пары для следующего тура плей-офф
      */
     public function generateNextPlayOffRound(int $tournamentId): array
     {
         // Получаем текущий тур
-        $currentTour = $this->getCurrentTour($tournamentId);
+        $currentTour = $this->gameRepository->getCurrentTour($tournamentId);
         $nextTour = $currentTour + 1;
 
         // Получаем победителей предыдущего тура
@@ -121,7 +135,7 @@ class PlayOffService
     }
 
     /**
-     * Формирует пары команд для следующего тура
+     * Формирует пары команд для следующего тура случайно
      */
     private function pairTeams(array $teamIds): array
     {
@@ -129,20 +143,5 @@ class PlayOffService
         return array_chunk($teamIds, 2);
     }
 
-    private function initialpairteams(array $teamIds): array
-    {
-        shuffle($teamIds); // Перемешиваем для случайного распределения
-        return array_chunk($teamIds, 2);
-    }
-    /**
-     * Получает текущий тур турнира
-     */
-    private function getCurrentTour(int $tournamentId): int
-    {
-        $lastGame = Game::where('tournament_id', $tournamentId)
-            ->orderBy('tour', 'desc')
-            ->first();
 
-        return $lastGame ? $lastGame->tour : 0;
-    }
 }

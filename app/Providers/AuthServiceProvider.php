@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Components\RoleDictionary;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,6 +26,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        // Регистрация Gate
+        Gate::define('manage-games', function ($user) {
+            return in_array($user->role, [RoleDictionary::ADMIN, RoleDictionary::JUDGE]);
+        });
+
     }
 }
