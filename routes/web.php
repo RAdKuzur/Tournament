@@ -57,6 +57,8 @@ Route::get('/tournament/show/{id}', [TournamentController::class, 'show'])->name
 Route::get('/tournament/edit/{id}', [TournamentController::class, 'edit'])->name('tournament.edit');
 Route::put('/tournament/update/{id}', [TournamentController::class, 'update'])->name('tournament.update');
 Route::delete('/tournament/destroy/{id}', [TournamentController::class, 'destroy'])->name('tournament.destroy');
+Route::get('/tournament/team-leaderboard/{id}', [TournamentController::class, 'teamLeaderboard'])->name('tournament.team-leaderboard');
+Route::get('/tournament/personal-leaderboard/{id}', [TournamentController::class, 'personalLeaderboard'])->name('tournament.personal-leaderboard');
 
 //TeamController
 Route::get('/team/index', [TeamController::class, 'index'])->name('team.index');

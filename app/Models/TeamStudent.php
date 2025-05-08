@@ -26,4 +26,12 @@ class TeamStudent extends Model
     {
         return $this->hasMany(TeamStudentParticipant::class);
     }
+    public function getScores()
+    {
+        $score = 0;
+        foreach($this->participants as $participant) {
+            $score += $participant->score;
+        }
+        return $score;
+    }
 }

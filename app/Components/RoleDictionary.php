@@ -32,6 +32,8 @@ class RoleDictionary extends BaseDictionary
         '/tournament/edit',
         '/tournament/update',
         '/tournament/destroy',
+        '/tournament/team-leaderboard',
+        '/tournament/personal-leaderboard',
         // Team routes
         '/team/index',
         '/team/create',

@@ -30,5 +30,7 @@
         <a href="{{ route('tournament.index') }}" class="btn btn-secondary">Назад к списку</a>
         <a href="{{ route('tournament.edit', $tournament->id) }}" class="btn btn-warning">Изменить</a>
         <a href="{{ route('draw.index', $tournament->id) }}" class="btn btn-success">Перейти к жеребьевке</a>
+        <a href="{{ route('tournament.team-leaderboard', $tournament->id) }}" class="btn btn-primary">Перейти к командному зачёту</a>
+        <a href="{{ route('tournament.personal-leaderboard', $tournament->id) }}" class="btn btn-info">Перейти к личному зачёту</a>
     </div>
 @endsection

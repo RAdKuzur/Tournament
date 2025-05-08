@@ -3,6 +3,8 @@
 namespace App\Http\Repositories;
 
 use App\Models\Game;
+use App\Models\TeamStudent;
+use App\Models\TeamStudentParticipant;
 
 class GameRepository
 {
@@ -11,7 +13,7 @@ class GameRepository
         return Game::create([
             'first_team_id' => $first_team_id,
             'second_team_id' => $second_team_id,
-           'tournament_id' => $tournament_id,
+            'tournament_id' => $tournament_id,
             'tour' => $tour,
         ]);
     }

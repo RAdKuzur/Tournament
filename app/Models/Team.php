@@ -49,4 +49,14 @@ class Team extends Model
         }
         return $score;
     }
+    public function getTournamentScore()
+    {
+        $score = 0;
+        foreach($this->teamStudents as $students){
+            foreach($students->participants as $participant){
+                $score = $score + $participant->score;
+            }
+        }
+        return $score;
+    }
 }

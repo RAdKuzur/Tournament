@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Repositories\TeamRepository;
 use App\Http\Repositories\TournamentRepository;
 use App\Http\Services\AccessService;
 use App\Models\Tournament;
@@ -12,13 +13,16 @@ class TournamentController extends Controller
     //
     private TournamentRepository $tournamentRepository;
     private AccessService $accessService;
+    private TeamRepository $teamRepository;
     public function __construct(
         TournamentRepository $tournamentRepository,
-        AccessService $accessService
+        AccessService $accessService,
+        TeamRepository $teamRepository
     )
     {
         $this->tournamentRepository = $tournamentRepository;
         $this->accessService = $accessService;
+        $this->teamRepository = $teamRepository;
     }
 
     public function index() {
@@ -101,6 +105,32 @@ class TournamentController extends Controller
                 return redirect()->route('tournament.show', ['id' => $tournament->id]);
             }
             return redirect('tournament/index');
+        }
+        else {
+            return redirect()->route('tournament.index');
+        }
+    }
+    public function teamLeaderboard($id) {
+        if($this->accessService->checkAccess()){
+            $teams = $this->teamRepository->getAllbytournament($id);
+            return view('tournament.team-leaderboard',
+                [
+                    'teams' => $teams,
+                ]
+            );
+        }
+        else {
+            return redirect()->route('tournament.index');
+        }
+    }
+    public function personalLeaderboard($id) {
+        if($this->accessService->checkAccess()){
+            $teams = $this->teamRepository->getAllbytournament($id);
+            return view('tournament.personal-leaderboard',
+                [
+                    'teams' => $teams,
+                ]
+            );
         }
         else {
             return redirect()->route('tournament.index');

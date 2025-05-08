@@ -11,6 +11,7 @@ use App\Http\Repositories\GameRepository;
 use App\Http\Repositories\StudentRepository;
 use App\Http\Repositories\TournamentRepository;
 use App\Http\Services\AccessService;
+use App\Http\Services\DrawCircleService;
 use App\Http\Services\DrawSwissService;
 use App\Http\Services\PlayOffService;
 use App\Models\Defence;
@@ -29,13 +30,14 @@ class DrawController extends Controller
 
     private PlayOffService $playOffService;
     private DrawSwissService $drawSwissService;
+    private DrawCircleService $drawCircleService;
     public function __construct(
         GameRepository $gameRepository,
         AccessService $accessService,
         PlayOffService $playOffService,
         TournamentRepository $tournamentRepository,
-        DrawSwissService $drawSwissService
-
+        DrawSwissService $drawSwissService,
+        DrawCircleService $drawCircleService
     )
     {
         $this->gameRepository = $gameRepository;
@@ -43,6 +45,7 @@ class DrawController extends Controller
         $this->playOffService = $playOffService;
         $this->tournamentRepository = $tournamentRepository;
         $this->drawSwissService = $drawSwissService;
+        $this->drawCircleService = $drawCircleService;
     }
 
     public function index($tournament_id)
@@ -55,6 +58,7 @@ class DrawController extends Controller
 
         if (count($games) == 0) {
             try {
+
                 $tournament = $this->tournamentRepository->get($tournament_id);
                 switch ($tournament->type) {
                     case TournamentTypeDictionary::SWISS:
@@ -64,8 +68,10 @@ class DrawController extends Controller
                         $pairs = $this->playOffService->generateInitialPlayOffRound($tournament_id);
                         $this->playOffService->createGamesFromPairs($pairs, $tournament_id);
                         break;
+                    case TournamentTypeDictionary::CIRCLE:
+                        $this->drawCircleService->drawCircle($tournament_id);
+                        break;
                 }
-                // Обновляем список игр после создания
                 $games = $this->gameRepository->getAllGamesFromTournament($tournament_id);
 
             } catch (\Exception $e) {
@@ -75,6 +81,9 @@ class DrawController extends Controller
         }
 
         return view('Draw.index', ['games' => $games]);
+    }
+    public function nextRound($tournament_id){
+
     }
 
     public function Concluderound($tournament_id)
@@ -108,8 +117,4 @@ class DrawController extends Controller
 
         return view('Draw.index', ['games' => $games]);
     }
-
-
-
-
 }

@@ -15,7 +15,7 @@ class TeamRepository
     }
     public function getAllbytournament($tournamentId){
         return Team::where('tournament_id', $tournamentId)
-            ->get();;
+            ->get();
     }
     public function delete($id){
         return Team::destroy($id);
