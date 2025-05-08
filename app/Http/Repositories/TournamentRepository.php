@@ -22,4 +22,10 @@ class TournamentRepository
     public function checkUnique($name, $beginDate, $finishDate){
         return Tournament::where('name' ,$name)->where('begin_date' ,$beginDate)->where('finish_date' ,$finishDate)->exists();
     }
+    public function nextTour($id)
+    {
+        $tournament = $this->get($id);
+        $tournament->current_tour = $tournament->current_tour + 1;
+        return $tournament->save();
+    }
 }

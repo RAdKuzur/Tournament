@@ -34,4 +34,14 @@ class TeamStudent extends Model
         }
         return $score;
     }
+    public function getGameScore($gameId){
+        $score = 0;
+        foreach ($this->participants as $participant)
+        {
+            if ($participant->game_id == $gameId) {
+                $score += $participant->score;
+            }
+        }
+        return $score;
+    }
 }

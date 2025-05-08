@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class TeamStudentParticipant extends Model
 {
     use HasFactory;
+    public const PLUS = 0;
+    public const MINUS = 1;
     protected $fillable = [
         'game_id',
         'team_student_id',

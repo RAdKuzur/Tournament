@@ -53,10 +53,13 @@ class DrawController extends Controller
         if (!$this->accessService->checkAccess()) {
             return redirect()->route('auth.logout');
         }
-
-        $games = $this->gameRepository->getAllGamesFromTournament($tournament_id);
-
-        if (count($games) == 0) {
+        $tournament = $this->tournamentRepository->get($tournament_id);
+        $games = $this->gameRepository->getByTournamentAndTour($tournament_id, $tournament->current_tour);
+        return view('draw.index', [
+            'games' => $games,
+            'tournament' => $tournament,
+        ]);
+        /*if (count($games) == 0) {
             try {
 
                 $tournament = $this->tournamentRepository->get($tournament_id);
@@ -80,10 +83,23 @@ class DrawController extends Controller
             }
         }
 
-        return view('Draw.index', ['games' => $games]);
+        return view('Draw.index', ['games' => $games]);*/
     }
-    public function nextRound($tournament_id){
-
+    public function nextRound($id){
+        $tournament = $this->tournamentRepository->get($id);
+        switch ($tournament->type) {
+            case TournamentTypeDictionary::SWISS:
+                //функция жеребьёвки
+                break;
+            case TournamentTypeDictionary::PLAY_OFF:
+                //функция жеребьёвки
+                break;
+            case TournamentTypeDictionary::CIRCLE:
+                $this->drawCircleService->drawCircle($id);
+                $this->drawCircleService->nextTour($id);
+                break;
+        }
+        return redirect()->route('draw.index', $id);
     }
 
     public function Concluderound($tournament_id)
@@ -116,5 +132,22 @@ class DrawController extends Controller
         }
 
         return view('Draw.index', ['games' => $games]);
+    }
+
+    public function gamesTable($id)
+    {
+        if ($this->accessService->checkAccess()) {
+            $tournament = $this->tournamentRepository->get($id);
+            $games = $this->gameRepository->getByTournamentAndTour($id, $tournament->current_tour);
+            return view('draw.games-table', [
+                'games' => $games,
+                'tournament' => $tournament,
+            ]);
+        }
+        else {
+            return redirect()->route('draw.index', [
+                'id'
+            ]);
+        }
     }
 }

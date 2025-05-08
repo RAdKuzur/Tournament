@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DefenceController;
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeamController;
@@ -100,8 +101,14 @@ Route::get('/defence/leaderboard-update/{id}', [DefenceController::class, 'leade
 
 //DrawController
 Route::get('/draw/index/{id}', [DrawController::class, 'index'])->name('draw.index');
-Route::get('/draw/edit-score/{id}', [DrawController::class, 'edit-score'])->name('draw.edit-score');
-Route::get('/draw/conclude-round/{id}', [DrawController::class, 'edit-score'])->name('draw.edit-score');
+Route::get('/draw/games-table/{id}', [DrawController::class, 'gamesTable'])->name('draw.games-table');
+//Route::get('/draw/conclude-round/{id}', [DrawController::class, 'edit-score'])->name('draw.edit-score');
+Route::get('/draw/next-round/{id}', [DrawController::class, 'nextRound'])->name('draw.next-round');
+
+//GameController
+Route::get('/game/index/{id}', [GameController::class, 'index'])->name('game.index');
+Route::get('/game/change-score/{id}/{type}/{score}/{gameId}', [GameController::class, 'changeScore'])->name('game.change-score');
+
 Route::get('/', function () {
     return redirect()->route('auth.form');
 });
