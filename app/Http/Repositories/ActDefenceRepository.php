@@ -2,6 +2,7 @@
 
 namespace App\Http\Repositories;
 
+use App\Components\ColorDictionary;
 use App\Models\ActDefence;
 
 class ActDefenceRepository
@@ -16,7 +17,8 @@ class ActDefenceRepository
     public function create($name, $defenceId){
         return ActDefence::create([
             'name' => $name,
-            'defence_id' => $defenceId
+            'defence_id' => $defenceId,
+            'color' => ColorDictionary::WHITE
         ]);
     }
     public function checkUnique($name, $defenceId){
@@ -27,5 +29,13 @@ class ActDefenceRepository
     }
     public function delete($id){
         return ActDefence::destroy($id);
+    }
+    public function getColors(){
+        return (new ColorDictionary())->getList();
+    }
+    public function changeColor(ActDefence $model, $color)
+    {
+        $model->color = $color;
+        return $model->save();
     }
 }

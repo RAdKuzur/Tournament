@@ -14,7 +14,8 @@ class ActDefence extends Model
     protected $fillable = [
         'defence_id',
         'type',
-        'name'
+        'name',
+        'color'
     ];
     public function getTotalScore()
     {

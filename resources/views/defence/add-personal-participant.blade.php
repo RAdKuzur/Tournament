@@ -21,11 +21,12 @@
                 </thead>
                 <tbody>
                 @foreach($participants as $participant)
-                    <tr>
-                        <td>{{ $participant->id }}</td>
-                        <td class="fw-semibold">{{ $defence->name . ' ' . $participant->actDefence->name }}</td>
-                        <td class="fw-semibold">{{ $participant->student->getFullFio() }}</td>
-                        <td class="text-end">
+                    <tr style="background-color: {{ (new \App\Components\ColorDictionary())->getColor($participant->actDefence->color) }} !important;">
+                        <td style="background-color: inherit !important;">{{ $participant->id }}</td>
+                        <td class="fw-semibold" style="background-color: inherit !important;">{{ $defence->name . ' ' . $participant->actDefence->name }}</td>
+                        <td class="fw-semibold" style="background-color: inherit !important;">{{ $participant->student->getFullFio() }}</td>
+                        <td class="text-end" style="background-color: inherit !important;">
+                            <a href="{{ route('defence.change-color', $participant->actDefence->id) }}" class="btn btn-sm btn-outline-primary">Изменить цвет</a>
                             <form action="{{ route('defence.delete-defence-participant', $participant->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Удалить этого участника?');">
                                 @csrf
                                 @method('DELETE')

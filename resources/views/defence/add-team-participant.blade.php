@@ -19,18 +19,19 @@
             </thead>
             <tbody>
             @foreach($actDefences as $act)
-                <tr>
-                    <td>{{ $act->id }}</td>
-                    <td class="fw-semibold">{{ $act->name }}</td>
-                    <td class="fw-semibold">{{ $defence->name }}</td>
-                    <td class="fw-semibold">
+                <tr style="background-color: {{ (new \App\Components\ColorDictionary())->getColor($act->color) }} !important;">
+                    <td style="background-color: inherit !important;">{{ $act->id }}</td>
+                    <td class="fw-semibold" style="background-color: inherit !important;">{{ $act->name }}</td>
+                    <td class="fw-semibold" style="background-color: inherit !important;">{{ $defence->name }}</td>
+                    <td class="fw-semibold" style="background-color: inherit !important;">
                         @php
                             foreach($act->participants as $participant) {
                                 echo $participant->student->getFullFio() . '<br>';
                             }
                         @endphp
                     </td>
-                    <td class="text-end">
+                    <td class="text-end" style="background-color: inherit !important;">
+                        <a href="{{ route('defence.change-color', $participant->actDefence->id) }}" class="btn btn-sm btn-outline-primary">Изменить цвет</a>
                         <a href="{{ route('defence.add-team-participant', $act->id) }}" class="btn btn-sm btn-outline-primary">Добавить участников</a>
                         <form action="{{ route('defence.delete-act-participant', $act->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Удалить эту команду?');">
                             @csrf

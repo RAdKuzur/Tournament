@@ -98,7 +98,8 @@ Route::get('/defence/leaderboard/{id}', [DefenceController::class, 'leaderboard'
 Route::get('/defence/score/{id}', [DefenceController::class, 'score'])->name('defence.score');
 Route::get('/defence/change-score/{id}/{type}/{score}', [DefenceController::class, 'changeScore'])->name('defence.change-score');
 Route::get('/defence/leaderboard-update/{id}', [DefenceController::class, 'leaderboardUpdate'])->name('defence.leaderboard-update');
-
+Route::get('/defence/change-color/{id}', [DefenceController::class, 'changeColor'])->name('defence.change-color');
+Route::post('/defence/change-color-post/{id}', [DefenceController::class, 'changeColorPost'])->name('defence.change-color-post');
 //DrawController
 Route::get('/draw/index/{id}', [DrawController::class, 'index'])->name('draw.index');
 Route::get('/draw/games-table/{id}', [DrawController::class, 'gamesTable'])->name('draw.games-table');

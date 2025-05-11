@@ -67,6 +67,8 @@ class RoleDictionary extends BaseDictionary
         '/defence/score',
         '/defence/change-score',
         '/defence/leaderboard-update',
+        '/defence/change-color',
+        '/defence/change-color-post',
         //Draw routes
         '/draw/index/',
         '/draw/edit-score/',

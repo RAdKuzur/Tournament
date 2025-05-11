@@ -276,4 +276,23 @@ class DefenceController extends Controller
             return redirect()->route('defence.index');
         }
     }
+    public function changeColor($id)
+    {
+        $colors = $this->actDefenceRepository->getColors();
+        $actDefence = $this->actDefenceRepository->get($id);
+        return view('defence.change-color', [
+            'actDefence' => $actDefence,
+            'colors' => $colors
+        ]);
+    }
+    public function changeColorPost(Request $request, $id)
+    {
+        $data = $request->validate([
+            'color' => 'integer|required',
+        ]);
+
+        $model = $this->actDefenceRepository->get($id);
+        $this->actDefenceRepository->changeColor($model, $data['color']);
+        return redirect()->route('defence.act-defence', ['id' => $model->defence->id]);
+    }
 }
