@@ -55,47 +55,39 @@ class DrawController extends Controller
         }
         $tournament = $this->tournamentRepository->get($tournament_id);
         $games = $this->gameRepository->getByTournamentAndTour($tournament_id, $tournament->current_tour);
+
+        if (count($games) == 0) {
+            switch ($tournament->type) {
+                case TournamentTypeDictionary::SWISS:
+                    $this->drawSwissService->createFirstGame($tournament_id);
+                    break;
+                case TournamentTypeDictionary::PLAY_OFF:
+                    $pairs = $this->playOffService->generateInitialPlayOffRound($tournament_id);
+                    $this->playOffService->createGamesFromPairs($pairs, $tournament_id);
+                    break;
+                case TournamentTypeDictionary::CIRCLE:
+                    $this->drawCircleService->drawCircle($tournament_id);
+                    break;
+            }
+            $games = $this->gameRepository->getByTournamentAndTour($tournament_id, $tournament->current_tour + 1);
+        }
+
         return view('draw.index', [
             'games' => $games,
             'tournament' => $tournament,
         ]);
-        /*if (count($games) == 0) {
-            try {
 
-                $tournament = $this->tournamentRepository->get($tournament_id);
-                switch ($tournament->type) {
-                    case TournamentTypeDictionary::SWISS:
-                        $this->drawSwissService->createFirstGame($tournament_id);
-                        break;
-                    case TournamentTypeDictionary::PLAY_OFF:
-                        $pairs = $this->playOffService->generateInitialPlayOffRound($tournament_id);
-                        $this->playOffService->createGamesFromPairs($pairs, $tournament_id);
-                        break;
-                    case TournamentTypeDictionary::CIRCLE:
-                        $this->drawCircleService->drawCircle($tournament_id);
-                        break;
-                }
-                $games = $this->gameRepository->getAllGamesFromTournament($tournament_id);
-
-            } catch (\Exception $e) {
-                return redirect()->back()
-                    ->with('error', $e->getMessage());
-            }
-        }
-
-        return view('Draw.index', ['games' => $games]);*/
     }
     public function nextRound($id){
         $tournament = $this->tournamentRepository->get($id);
         switch ($tournament->type) {
             case TournamentTypeDictionary::SWISS:
-                //функция жеребьёвки
+                $this->drawSwissService->createNewGame($id);
                 break;
             case TournamentTypeDictionary::PLAY_OFF:
                 //функция жеребьёвки
                 break;
             case TournamentTypeDictionary::CIRCLE:
-                $this->drawCircleService->drawCircle($id);
                 $this->drawCircleService->nextTour($id);
                 break;
         }

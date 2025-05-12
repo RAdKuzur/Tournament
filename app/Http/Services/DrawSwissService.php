@@ -5,25 +5,30 @@ namespace App\Http\Services;
 use App\Http\Repositories\GameRepository;
 use App\Http\Repositories\StudentRepository;
 use App\Http\Repositories\TeamRepository;
+use App\Http\Repositories\TeamStudentParticipantRepository;
 use App\Http\Repositories\TeamStudentRepository;
 use App\Http\Repositories\TournamentRepository;
 use App\Models\Game;
+use Ramsey\Collection\Collection;
 
 class DrawSwissService
 {
     private TournamentRepository $tournamentRepository;
     private GameRepository $gameRepository;
     private TeamRepository $teamRepository;
+    private TeamStudentParticipantRepository $teamStudentParticipantRepository;
 
     public function __construct(
         TeamRepository $teamRepository,
         TournamentRepository $tournamentRepository,
         TeamStudentRepository $teamStudentRepository,
-        GameRepository $gameRepository
+        GameRepository $gameRepository,
+        TeamStudentParticipantRepository $teamStudentParticipantRepository
     ) {
         $this->tournamentRepository = $tournamentRepository;
         $this->gameRepository = $gameRepository;
         $this->teamRepository = $teamRepository;
+        $this->teamStudentParticipantRepository = $teamStudentParticipantRepository;
     }
 
 
@@ -42,31 +47,63 @@ class DrawSwissService
 
         // Формируем пары: сильнейший vs следующий сильнейший
         $this->createPairs($sortedTeams, $tournamentId, 1);
+
+        $this->tournamentRepository->nextTour($tournamentId);
+
     }
 
     public function createNewGame($tournamentId)
     {
         $tournament = $this->tournamentRepository->get($tournamentId);
-        $currentTour = $tournament->current_tour + 1;
+        $newTour = $tournament->current_tour + 1;
+        $teams = $this->teamRepository->getAllbytournament($tournamentId);
+
+        $teamCount = count($teams);
+        if (!$this->checkMaxTour($teamCount, $newTour)) {
+            return 0;
+        }
+
+        if (!$this->checkWinInAllGames($tournamentId, $tournament->current_tour)) {
+            return 0;
+        }
 
         // Получаем статистику команд
-        $teamStats = $this->getTeamStats($tournament);
+        $teamStats = $this->getTeamStats($teams);
 
         // Сортируем команды по критериям
         $sortedTeams = $this->sortTeams($teamStats);
 
         // Формируем пары для нового тура
-        $this->createPairs($sortedTeams, $tournamentId, $currentTour);
+        $this->createPairs($sortedTeams, $tournamentId, $newTour);
 
         // Обновляем номер текущего тура
-        $tournament->update(['current_tour' => $currentTour]);
+        $this->tournamentRepository->nextTour($tournamentId);
     }
 
-    private function getTeamStats($tournament)
+    //Проверяем не превышаем ли мы максимальное кол-во туров
+    private function checkMaxTour(int $teamCount, int $newTour): bool {
+        $adjustedCount = $teamCount % 2 === 0 ? $teamCount : $teamCount + 1;
+        if ($newTour > (int) ceil(log($adjustedCount, 2)) + 1) {
+            return false;
+        }
+        return true;
+    }
+
+    //Проверяем есть ли победитель в каждой игре
+    private function  checkWinInAllGames(int $tournament_id, int $tour): bool {
+        $games = $this->gameRepository->getByTournamentAndTour($tournament_id, $tour);
+        foreach ($games as $game) {
+            if ($game->getFirstTeamScore() == $game->getSecondTeamScore()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private function getTeamStats($teams): \Illuminate\Support\Collection
     {
         $stats = collect();
-
-        foreach ($tournament->teams as $team) {
+        foreach ($teams as $team) {
             $games = Game::where('first_team_id', $team->id)
                 ->orWhere('second_team_id', $team->id)
                 ->get();
@@ -145,12 +182,18 @@ class DrawSwissService
         // Создаем игры
         foreach ($pairs as $pair) {
             if ($pair[1] !== null) {
-                $this->gameRepository->create(
+                $game = $this->gameRepository->create(
                     $pair[0],
                     $pair[1],
                     $tournamentId,
                     $tourNumber
                 );
+
+                $firstTeam = $this->teamRepository->get($pair[0]);
+                $secondTeam = $this->teamRepository->get($pair[1]);
+
+                $this->teamStudentParticipantRepository->createParticipants($firstTeam->teamStudents, $game->id);
+                $this->teamStudentParticipantRepository->createParticipants($secondTeam->teamStudents, $game->id);
             }
         }
     }
