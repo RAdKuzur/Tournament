@@ -105,6 +105,7 @@ Route::get('/draw/index/{id}', [DrawController::class, 'index'])->name('draw.ind
 Route::get('/draw/games-table/{id}', [DrawController::class, 'gamesTable'])->name('draw.games-table');
 //Route::get('/draw/conclude-round/{id}', [DrawController::class, 'edit-score'])->name('draw.edit-score');
 Route::get('/draw/next-round/{id}', [DrawController::class, 'nextRound'])->name('draw.next-round');
+Route::get('/draw/start-tournament/{id}', [DrawController::class, 'startTournament'])->name('draw.start-tournament');
 
 //GameController
 Route::get('/game/index/{id}', [GameController::class, 'index'])->name('game.index');

@@ -18,6 +18,14 @@
                 <div class="alert alert-info mb-0">
                     Пока нет запланированных игр.
                 </div>
+                @can('manage-games')
+                    <div class="text-center pt-4">
+                        <a href="{{ route('draw.start-tournament', $tournament->id ) }}" class="btn btn-sm btn-outline-primary">
+                            Начать турнир
+                        </a>
+                    </div>
+                @endcan
+
             @endif
         </div>
     </div>

@@ -56,6 +56,17 @@ class DrawController extends Controller
         $tournament = $this->tournamentRepository->get($tournament_id);
         $games = $this->gameRepository->getByTournamentAndTour($tournament_id, $tournament->current_tour);
 
+        return view('draw.index', [
+            'games' => $games,
+            'tournament' => $tournament,
+        ]);
+    }
+
+    public function startTournament($tournament_id) {
+
+        $tournament = $this->tournamentRepository->get($tournament_id);
+        $games = $this->gameRepository->getAllGamesFromTournament($tournament_id);
+
         if (count($games) == 0) {
             switch ($tournament->type) {
                 case TournamentTypeDictionary::SWISS:
@@ -69,15 +80,11 @@ class DrawController extends Controller
                     $this->drawCircleService->drawCircle($tournament_id);
                     break;
             }
-            $games = $this->gameRepository->getByTournamentAndTour($tournament_id, $tournament->current_tour + 1);
         }
 
-        return view('draw.index', [
-            'games' => $games,
-            'tournament' => $tournament,
-        ]);
-
+        return redirect()->route('draw.index', $tournament_id);
     }
+
     public function nextRound($id){
         $tournament = $this->tournamentRepository->get($id);
         switch ($tournament->type) {
