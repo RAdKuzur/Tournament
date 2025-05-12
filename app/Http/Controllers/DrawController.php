@@ -89,7 +89,10 @@ class DrawController extends Controller
         $tournament = $this->tournamentRepository->get($id);
         switch ($tournament->type) {
             case TournamentTypeDictionary::SWISS:
-                $this->drawSwissService->createNewGame($id);
+                $result = $this->drawSwissService->createNewGame($id);
+
+                if ($result)
+                    return redirect()->route('draw.index', $id)->with('error', 'Произошла ошибка: ' . $result);
                 break;
             case TournamentTypeDictionary::PLAY_OFF:
                 //функция жеребьёвки

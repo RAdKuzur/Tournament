@@ -6,6 +6,11 @@
     @php use \App\Models\Game; @endphp
 
     <div class="card shadow-sm border-0">
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <div class="card-body">
             @if($games->count())
                 <div class="table-responsive" id = "game-table">
