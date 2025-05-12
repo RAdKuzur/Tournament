@@ -55,15 +55,7 @@
         </div>
         <div class="mb-3">
             <label for="tournament-type" class="form-label">Выберите тип жеребьёвки</label>
-            <select id="tournament-type" name="type" class="form-select" required>
-                <option value="" disabled>— выберите тип жеребьёвки —</option>
-                @foreach($types as $i => $type)
-                    <option value="{{ $i }}"
-                        {{ old('type', $tournament->type) == $i ? 'selected' : '' }}>
-                        {{ $type }}
-                    </option>
-                @endforeach
-            </select>
+            <input type="text" class="form-control" value="{{$types[$tournament->type]}}" readonly/>
         </div>
         <button type="submit" class="btn btn-primary">Сохранить изменения</button>
         <a href="{{ route('tournament.index') }}" class="btn btn-secondary">Отмена</a>

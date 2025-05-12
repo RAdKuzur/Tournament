@@ -41,16 +41,9 @@
                    value="{{ old('olymp_score', $student->olymp_score) }}" required>
         </div>
         <div class="mb-3">
-            <label for="school" class="form-label">Выберите школу</label>
-            <select id="school" name="school_id" class="form-select" required>
-                <option value="" disabled>— выберите школу —</option>
-                @foreach($schools as $school)
-                    <option value="{{ $school->id }}"
-                        {{ old('school_id', $student->school_id) == $school->id ? 'selected' : '' }}>
-                        {{ $school->name }}
-                    </option>
-                @endforeach
-            </select>
+            <label for="school" class="form-label">Школа</label>
+            <input type="text" class="form-control" value="{{$student->school->name}}" readonly/>
+
         </div>
         <button type="submit" class="btn btn-primary">Сохранить изменения</button>
         <a href="{{ route('student.index') }}" class="btn btn-secondary">Отмена</a>

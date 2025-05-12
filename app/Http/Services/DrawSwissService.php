@@ -83,7 +83,7 @@ class DrawSwissService
     //Проверяем не превышаем ли мы максимальное кол-во туров
     private function checkMaxTour(int $teamCount, int $newTour): bool {
         $adjustedCount = $teamCount % 2 === 0 ? $teamCount : $teamCount + 1;
-        if ($newTour > (int) ceil(log($adjustedCount, 2)) + 1) {
+        if ($newTour > (int) ceil(log($adjustedCount, 2))) {
             return false;
         }
         return true;

@@ -40,7 +40,7 @@
 
         </div>
         <div class="mb-3">
-            <label for="school" class="form-label">Выберите школу</label>
+            <label for="school" class="form-label">Школа</label>
             <input id="school" class="form-control" type="text" value="{{$team->school->name}}" readonly/>
         </div>
         <div class="mb-3">
