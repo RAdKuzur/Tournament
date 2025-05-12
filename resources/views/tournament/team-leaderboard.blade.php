@@ -4,7 +4,15 @@
 
 @section('content')
     @php use App\Models\Tournament;
+
     @endphp
+
+    @php
+        $sortedTeams = $teams->sortByDesc(function($team) {
+            return $team->getTournamentScore();
+        });
+    @endphp
+
     <div class="card shadow-sm border-0">
         <div class="card-body">
             <h1 class="h4 mb-4">Список команд</h1>
@@ -18,7 +26,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($teams as $team)
+                        @foreach($sortedTeams as $team)
+
                             <tr>
                                 <td>{{ $team->id }}</td>
                                 <td class="fw-semibold">{{ $team->name }}</td>

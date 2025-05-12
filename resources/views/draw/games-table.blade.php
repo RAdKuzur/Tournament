@@ -39,4 +39,7 @@
     @endforeach
     </tbody>
 </table>
+<a href="{{ route('draw.next-round', $tournament->id ) }}" class="btn btn-sm btn-outline-primary">
+    Начать жеребьёвку тура №{{$tournament->current_tour + 1}}
+</a>
 
