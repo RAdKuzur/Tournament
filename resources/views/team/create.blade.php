@@ -21,12 +21,18 @@
 </head>
 <body>
 <div class="container mt-5">
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     <h1>Введите название команды</h1>
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
+
     <form method="POST" action="{{ route('team.store') }}">
         @csrf
         <div class="mb-3">

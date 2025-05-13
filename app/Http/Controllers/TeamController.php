@@ -72,14 +72,10 @@ class TeamController extends Controller
                 'students' => 'required'
             ]);
             if (!$this->teamRepository->checkUnique($data['name'], $data['tournament_id'])) {
-                $team = Team::create([
-                        'name' => $data['name'],
-                        'school_id' => $data['school_id'],
-                        'tournament_id' => $data['tournament_id'],
-                    ]
-                );
-                $this->teamService->createTeamStudents($data['students'], $team);
-                return redirect()->route('team.show', ['id' => $team->id]);
+                $team = $this->teamService->createTeamWithStudents($data['name'], $data['school_id'], $data['tournament_id'], $data['students']);
+                if ($team)
+                    return redirect()->route('team.show', ['id' => $team->id]);
+                return redirect()->route('team.create')->with('error', 'Ошибка при создании команды');
             }
             return redirect('team/index');
         }
